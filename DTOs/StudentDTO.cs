@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SchoolAPI.Models
+namespace SchoolAPI.DTOs
 {
-    public class Student
+    public class StudentDTO
     {
         public int Id { get; set; }
+
         [Required]
         public string FirstName { get; set; } = string.Empty;
 

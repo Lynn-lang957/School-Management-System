@@ -155,6 +155,7 @@ C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\
 C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\SchoolAPI.csproj.CoreCompileInputs.cache
 C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\SchoolAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\SchoolAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\SchoolAPI.sourcelink.json
 C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\ADMIN\Documents\School Management System-project 1\SchoolAPI\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json

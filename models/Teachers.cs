@@ -2,9 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SchoolAPI.Models
 {
-    public class Student
+    public class Teacher
     {
         public int Id { get; set; }
+
         [Required]
         public string FirstName { get; set; } = string.Empty;
 
@@ -15,6 +16,6 @@ namespace SchoolAPI.Models
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
 
-        public DateTime DateOfBirth { get; set; }
+        public string Subject { get; set; } = string.Empty;
     }
 }
