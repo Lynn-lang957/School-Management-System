@@ -16,5 +16,9 @@ namespace SchoolAPI.Models
         public string Email { get; set; } = string.Empty;
 
         public DateTime DateOfBirth { get; set; }
+        public int? ParentId { get; set; }
+        public Parent Parent { get; set; } = null!;
+        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+        
     }
 }

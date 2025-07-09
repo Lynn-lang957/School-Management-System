@@ -17,5 +17,6 @@ namespace SchoolAPI.Models
         public string Email { get; set; } = string.Empty;
 
         public string Subject { get; set; } = string.Empty;
+        public ICollection<Course> Courses { get; set; } = new List<Course>();
     }
 }
