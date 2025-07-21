@@ -22,7 +22,7 @@ public class AttendanceController : ControllerBase
             StudentId = dto.StudentId,
             CourseId = dto.CourseId,
             Date = dto.Date,
-            IsPresent = dto.IsPresent
+            Status = dto.Status
         };
 
         _context.Attendances.Add(attendance);

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Data;
@@ -25,14 +26,14 @@ namespace SchoolAPI.Controllers
             return await _context.Teachers.ToListAsync();
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: api/Teacher
         [HttpPost]
         public async Task<ActionResult<Teacher>> CreateTeacher(TeacherDTO dto)
         {
             var teacher = new Teacher
     {
-        FirstName = dto.FirstName,
-        LastName = dto.LastName,
+        FullName = dto.FullName,         
         Email = dto.Email,
         Subject = dto.Subject
     };
@@ -41,8 +42,9 @@ namespace SchoolAPI.Controllers
 
             return CreatedAtAction(nameof(GetTeachers), new { id = teacher.Id }, teacher);
         }
+        [Authorize(Roles = "Admin")]
         // PUT: api/Teacher/1
-[HttpPut("{id}")]
+        [HttpPut("{id}")]
 public async Task<IActionResult> UpdateTeacher(int id, TeacherDTO dto)
 {
     if (id != dto.Id)
@@ -50,15 +52,14 @@ public async Task<IActionResult> UpdateTeacher(int id, TeacherDTO dto)
         return BadRequest("Teacher ID mismatch.");
     }
 
-    var teacher = await _context.Teachers.FindAsync(id);
+    Teacher? teacher = await _context.Teachers.FindAsync(id);
     if (teacher == null)
     {
         return NotFound();
     }
 
     // Update fields
-    teacher.FirstName = dto.FirstName;
-    teacher.LastName = dto.LastName;
+    teacher.FullName = dto.FullName;
     teacher.Email = dto.Email;
     teacher.Subject = dto.Subject;
 
@@ -66,6 +67,7 @@ public async Task<IActionResult> UpdateTeacher(int id, TeacherDTO dto)
 
     return NoContent(); // 204
 }
+        [Authorize(Roles = "Admin")]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteTeacher(int id)
 {

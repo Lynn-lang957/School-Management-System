@@ -20,7 +20,7 @@ namespace SchoolAPI.Data
         public DbSet<Attendance> Attendances { get; set; }
 
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -37,6 +37,11 @@ namespace SchoolAPI.Data
                 .HasOne(sc => sc.Course)
                 .WithMany(c => c.StudentCourses)
                 .HasForeignKey(sc => sc.CourseId);
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.User)
+                .WithOne()
+                .HasForeignKey<Student>(s => s.UserId);
+
         }
     }
 }

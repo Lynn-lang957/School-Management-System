@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Data;
@@ -17,6 +18,7 @@ namespace SchoolAPI.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPost]
         public async Task<IActionResult> CreateGrade([FromBody] GradeDTO dto)
         {
@@ -43,6 +45,7 @@ namespace SchoolAPI.Controllers
             return Ok(grades);
         }
 
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGrade(int id, [FromBody] GradeDTO dto)
         {
@@ -56,6 +59,7 @@ namespace SchoolAPI.Controllers
             return Ok(grade);
         }
 
+       [Authorize(Roles = "Admin, Teacher")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGrade(int id)
         {

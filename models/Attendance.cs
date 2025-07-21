@@ -11,6 +11,6 @@ namespace SchoolAPI.Models
         public Course Course { get; set; } = null!;
 
         public DateTime Date { get; set; }
-        public bool IsPresent { get; set; }
+        public required string Status { get; set; }
     }
 }

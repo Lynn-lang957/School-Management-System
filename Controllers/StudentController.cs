@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Data;
@@ -25,14 +26,15 @@ namespace SchoolAPI.Controllers
             return await _context.Students.ToListAsync();
         }
 
+
+        [Authorize(Roles = "Admin")]
         // POST: api/Student
         [HttpPost]
 public async Task<ActionResult<Student>> CreateStudent(StudentDTO dto)
 {
     var student = new Student
     {
-        FirstName = dto.FirstName,
-        LastName = dto.LastName,
+        FullName = dto.FullName,
         Email = dto.Email,
         DateOfBirth = dto.DateOfBirth
     };
@@ -43,8 +45,9 @@ public async Task<ActionResult<Student>> CreateStudent(StudentDTO dto)
     return CreatedAtAction(nameof(GetStudents), new { id = student.Id }, student);
 }
 
+       [Authorize(Roles = "Admin")]
         // PUT: api/Student/5
-[HttpPut("{id}")]
+        [HttpPut("{id}")]
 public async Task<IActionResult> UpdateStudent(int id, StudentDTO dto)
 {
     
@@ -54,8 +57,7 @@ public async Task<IActionResult> UpdateStudent(int id, StudentDTO dto)
         return NotFound();
     }
 
-    student.FirstName = dto.FirstName;
-    student.LastName = dto.LastName;
+    student.FullName= dto.FullName;
     student.Email = dto.Email;
     student.DateOfBirth = dto.DateOfBirth;
 
@@ -63,6 +65,7 @@ public async Task<IActionResult> UpdateStudent(int id, StudentDTO dto)
 
     return NoContent(); // 204 - success but no return body
 }
+        [Authorize(Roles = "Admin")]
 // DELETE: api/Student/5
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteStudent(int id)

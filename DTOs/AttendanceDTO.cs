@@ -10,6 +10,6 @@ namespace SchoolAPI.DTOs
         [Required]
         public DateTime Date { get; set; }
 
-        public bool IsPresent { get; set; }
-    }
+        public required string Status { get; set; }
+            }
 }

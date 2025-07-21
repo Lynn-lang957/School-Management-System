@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Data;
@@ -24,6 +25,7 @@ namespace SchoolAPI.Controllers
             return await _context.Courses.ToListAsync();
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: api/Course
         [HttpPost]
         public async Task<ActionResult<Course>> CreateCourse(CourseDTO dto)
@@ -41,6 +43,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtAction(nameof(GetCourses), new { id = course.Id }, course);
         }
 
+        [Authorize(Roles = "Admin")]
         // PUT: api/Course/1
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCourse(int id, CourseDTO dto)
@@ -61,6 +64,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         // DELETE: api/Course/1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(int id)

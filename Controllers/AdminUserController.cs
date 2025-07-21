@@ -8,7 +8,8 @@ namespace SchoolAPI.Controllers
 {
     [ApiController]
     [Route("api/admin")]
-    [Authorize(Roles = "Admin")]  // 💡 Only Admins can access
+    // [Authorize(Roles = "Admin")]  // 💡 Only Admins can access
+    [Authorize(Roles = "Admin")] // 💡 Only Admins can access
     public class AdminUserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,6 +34,7 @@ namespace SchoolAPI.Controllers
                 UserName = dto.Username,
                 Email = dto.Email,
                 FullName = dto.FullName
+                
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -56,7 +58,8 @@ namespace SchoolAPI.Controllers
                 u.Id,
                 u.UserName,
                 u.Email,
-                u.FullName
+                u.FullName,
+                
             });
 
             return Ok(users);

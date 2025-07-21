@@ -6,10 +6,7 @@ namespace SchoolAPI.Models
     {
         public int Id { get; set; }
         [Required]
-        public string FirstName { get; set; } = string.Empty;
-
-        [Required]
-        public string LastName { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
@@ -18,6 +15,8 @@ namespace SchoolAPI.Models
         public DateTime DateOfBirth { get; set; }
         public int? ParentId { get; set; }
         public Parent Parent { get; set; } = null!;
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
         public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
         
     }
