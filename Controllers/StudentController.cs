@@ -20,15 +20,23 @@ namespace SchoolAPI.Controllers
         }
 
         // GET: api/Student
-        [HttpGet]
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
             return await _context.Students.ToListAsync();
         }
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("{id}")]
+        public IActionResult GetStudentsInMyCourses() => Ok("Students enrolled in my courses");
+
+        [Authorize(Roles = "Student")]
+        [HttpGet("me")]
+        public IActionResult GetOwnProfile() => Ok("Own profile");
 
 
         [Authorize(Roles = "Admin")]
         // POST: api/Student
+
         [HttpPost]
 public async Task<ActionResult<Student>> CreateStudent(StudentDTO dto)
 {

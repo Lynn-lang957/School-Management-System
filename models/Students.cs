@@ -17,7 +17,10 @@ namespace SchoolAPI.Models
         public Parent Parent { get; set; } = null!;
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
         public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+        public ICollection<Attendance> AttendanceRecords { get; set; } = new List<Attendance>();
+        public ICollection<Grade> Grades { get; set; } = new List<Grade>();
         
     }
 }

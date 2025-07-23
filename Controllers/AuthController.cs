@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using SchoolAPI.Models;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -60,9 +61,15 @@ public class AuthController : ControllerBase
             {
                 new Claim(ClaimTypes.Name, user.UserName ?? string.Empty), 
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, roles.FirstOrDefault()) 
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault() ?? string.Empty)
+
             };
-            var keyBytes = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+            var jwtKey = _configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+    throw new Exception("JWT key is missing in configuration.");
+
+var keyBytes = Encoding.UTF8.GetBytes(jwtKey);
+
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 

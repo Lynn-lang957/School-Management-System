@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Data;
@@ -13,7 +14,7 @@ public class AttendanceController : ControllerBase
     {
         _context = context;
     }
-
+[Authorize(Roles = "Teacher")]
     [HttpPost]
     public async Task<IActionResult> MarkAttendance([FromBody] AttendanceDTO dto)
     {
@@ -29,7 +30,9 @@ public class AttendanceController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(attendance);
     }
-
+[Authorize(Roles = "Teacher")]
+        [HttpPut("edit")]
+        public IActionResult EditAttendance() => Ok("Attendance edited");
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -40,7 +43,13 @@ public class AttendanceController : ControllerBase
 
         return Ok(records);
     }
-
+[Authorize(Roles = "Student,Parent")]
+        [HttpGet("view")]
+        public IActionResult ViewAttendance() => Ok("Attendance records");
+        [Authorize(Roles = "Admin")]
+        [HttpGet("audit")]
+        public IActionResult AuditAttendance() => Ok("Attendance audit");
+[Authorize(Roles = "Admin,Teacher")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

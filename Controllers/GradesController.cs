@@ -18,7 +18,7 @@ namespace SchoolAPI.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin, Teacher")]
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
         public async Task<IActionResult> CreateGrade([FromBody] GradeDTO dto)
         {
@@ -34,8 +34,8 @@ namespace SchoolAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(grade);
         }
-
-        [HttpGet]
+[Authorize(Roles = "Admin")]
+        [HttpGet("allgrades")]
         public async Task<IActionResult> GetAllGrades()
         {
             var grades = await _context.Grades
@@ -44,8 +44,20 @@ namespace SchoolAPI.Controllers
                 .ToListAsync();
             return Ok(grades);
         }
-
-        [Authorize(Roles = "Admin, Teacher")]
+        [Authorize(Roles = "Student")]
+        [HttpGet("mygrades")]
+        public async Task<IActionResult> ViewMyGrades()
+        {
+            var grades = await _context.Grades
+                .Include(g => g.StudentId)
+                .Include(g => g.Course)
+                .ToListAsync();
+            return Ok(grades);
+        } 
+        [Authorize(Roles = "Parent")]
+        [HttpGet("child/{studentId}")]
+        public IActionResult ViewChildGrades(int studentId) => Ok("Child grades");
+       [Authorize(Roles = "Admin, Teacher")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGrade(int id, [FromBody] GradeDTO dto)
         {

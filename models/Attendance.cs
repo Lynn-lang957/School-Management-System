@@ -1,6 +1,12 @@
 namespace SchoolAPI.Models
 {
-    public class Attendance
+    public enum AttendanceStatus
+{
+    Present,
+    Absent,
+    Late
+}
+public class Attendance
     {
         public int Id { get; set; }
 

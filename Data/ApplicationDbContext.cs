@@ -18,6 +18,8 @@ namespace SchoolAPI.Data
         public DbSet<StudentCourse> StudentCourses { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,10 +39,63 @@ namespace SchoolAPI.Data
                 .HasOne(sc => sc.Course)
                 .WithMany(c => c.StudentCourses)
                 .HasForeignKey(sc => sc.CourseId);
+            // STUDENT USER
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.User)
                 .WithOne()
                 .HasForeignKey<Student>(s => s.UserId);
+            // TEACHER USER
+            modelBuilder.Entity<Teacher>()
+              .HasOne(t => t.User)
+              .WithOne(u => u.Teacher)
+              .HasForeignKey<Teacher>(t => t.UserId);
+
+            // PARENT USER
+            modelBuilder.Entity<Parent>()
+            .HasOne(p => p.User)
+            .WithOne(u => u.Parent)
+            .HasForeignKey<Parent>(p => p.UserId);
+            modelBuilder.Entity<Enrollment>()
+            .HasKey(e => new { e.StudentId, e.CourseId });
+
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.Enrollments)
+                .HasForeignKey(e => e.StudentId);
+
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.CourseId);
+            modelBuilder.Entity<Attendance>()
+            .HasKey(e => new { e.StudentId, e.CourseId });
+            modelBuilder.Entity<Attendance>()
+            .HasOne(a => a.Student)
+            .WithMany(s => s.AttendanceRecords)
+            .HasForeignKey(a => a.StudentId);
+            modelBuilder.Entity<Attendance>()
+            .HasOne(a => a.Course)
+            .WithMany(c => c.AttendanceRecords)
+            .HasForeignKey(a => a.CourseId);
+            modelBuilder.Entity<Parent>()
+    .HasMany(p => p.Students)
+    .WithOne(s => s.Parent)
+    .HasForeignKey(s => s.ParentId)
+    .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Grade>()
+            .HasOne(g => g.Student)
+            .WithMany(s => s.Grades)
+            .HasForeignKey(g => g.StudentId)
+            .OnDelete(DeleteBehavior.Cascade);
+    modelBuilder.Entity<Course>()
+    .HasOne(c => c.Teacher)
+    .WithMany(t => t.Courses)
+    .HasForeignKey(c => c.TeacherId)
+    .OnDelete(DeleteBehavior.Cascade); 
+
+            
+
+
 
         }
     }

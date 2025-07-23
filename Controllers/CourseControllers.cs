@@ -24,7 +24,9 @@ namespace SchoolAPI.Controllers
         {
             return await _context.Courses.ToListAsync();
         }
-
+ [Authorize(Roles = "Student,Parent")]
+        [HttpGet("enrolled")]
+        public IActionResult GetEnrolledCourses() => Ok("Enrolled courses");
         [Authorize(Roles = "Admin")]
         // POST: api/Course
         [HttpPost]
@@ -42,7 +44,9 @@ namespace SchoolAPI.Controllers
 
             return CreatedAtAction(nameof(GetCourses), new { id = course.Id }, course);
         }
-
+       [Authorize(Roles = "Admin")]
+        [HttpPost("assign-teacher")]
+        public IActionResult AssignTeacherToCourse() => Ok("Teacher assigned to course");
         [Authorize(Roles = "Admin")]
         // PUT: api/Course/1
         [HttpPut("{id}")]

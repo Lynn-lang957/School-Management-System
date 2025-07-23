@@ -18,14 +18,16 @@ namespace SchoolAPI.Controllers
         {
             _context = context;
         }
-
+[Authorize(Roles = "Admin")]
         // GET: api/Teacher
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Teacher>>> GetTeachers()
         {
             return await _context.Teachers.ToListAsync();
         }
-
+[Authorize(Roles = "Teacher")]
+        [HttpGet("me")]
+        public IActionResult GetMyProfile() => Ok("Teacher profile");
         [Authorize(Roles = "Admin")]
         // POST: api/Teacher
         [HttpPost]
@@ -42,6 +44,9 @@ namespace SchoolAPI.Controllers
 
             return CreatedAtAction(nameof(GetTeachers), new { id = teacher.Id }, teacher);
         }
+        [Authorize(Roles = "Teacher")]
+        [HttpPost("enroll-student")]
+        public IActionResult EnrollStudentToMyCourse() => Ok("Student enrolled to teacher's course");
         [Authorize(Roles = "Admin")]
         // PUT: api/Teacher/1
         [HttpPut("{id}")]
