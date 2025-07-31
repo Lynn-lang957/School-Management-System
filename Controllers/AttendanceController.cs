@@ -43,7 +43,7 @@ public class AttendanceController : ControllerBase
 
         return Ok(records);
     }
-[Authorize(Roles = "Student,Parent")]
+[Authorize(Roles = "Student,Parent,Admin")]
         [HttpGet("view")]
         public IActionResult ViewAttendance() => Ok("Attendance records");
         [Authorize(Roles = "Admin")]

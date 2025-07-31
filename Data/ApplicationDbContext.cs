@@ -29,19 +29,19 @@ namespace SchoolAPI.Data
         .HasOne(a => a.Student)
         .WithOne()
         .HasForeignKey<ApplicationUser>(a => a.StudentId)
-        .IsRequired(false); // ✅ optional
+        .IsRequired(false); // optional
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(a => a.Teacher)
                 .WithOne()
                 .HasForeignKey<ApplicationUser>(a => a.TeacherId)
-                .IsRequired(false); // ✅ optional
+                .IsRequired(false); // optional
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(a => a.Parent)
                 .WithOne()
                 .HasForeignKey<ApplicationUser>(a => a.ParentId)
-                .IsRequired(false); // ✅ optional
+                .IsRequired(false); // optional
 
             // StudentCourse Many-to-Many
             modelBuilder.Entity<StudentCourse>()

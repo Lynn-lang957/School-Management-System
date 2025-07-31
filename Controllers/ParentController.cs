@@ -5,6 +5,7 @@ using SchoolAPI.Data;
 using SchoolAPI.DTOs;
 using SchoolAPI.Models;
 
+
 namespace SchoolAPI.Controllers
 {
     [ApiController]
@@ -105,7 +106,8 @@ namespace SchoolAPI.Controllers
         [Authorize(Roles = "Parent")]
         public async Task<IActionResult> GetMyChildren()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
             var parent = await _context.Parents
                 .Include(p => p.Students)
                     .ThenInclude(s => s.Grades)

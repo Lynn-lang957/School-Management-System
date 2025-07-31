@@ -1,10 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace SchoolAPI.DTOs
 {
     public class AssignTeacherDTO
     {
-    public int CourseId { get; set; }
         public int TeacherId { get; set; }
-            }
+        public int CourseId { get; set; }
+    }
 }

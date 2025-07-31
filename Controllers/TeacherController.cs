@@ -75,7 +75,7 @@ namespace SchoolAPI.Controllers
         [HttpPost("enroll-student")]
         public async Task<IActionResult> EnrollStudentToMyCourse([FromBody] EnrollmentDto dto)
 {
-    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     if (string.IsNullOrEmpty(userId))
         return Unauthorized("User ID not found in token.");
 

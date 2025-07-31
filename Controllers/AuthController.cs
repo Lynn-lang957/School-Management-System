@@ -63,9 +63,25 @@ public class AuthController : ControllerBase
 }
 
 
+    
+    await _userManager.AddToRoleAsync(user, model.Role);
+        if (model.Role == "Parent")
+{
+    var parent = new Parent
+    {
+        FullName = model.FullName,
+        Email = model.Email,
+        UserId = user.Id
+    };
+    _context.Parents.Add(parent);
+    await _context.SaveChangesAsync();
+}
+
+
 
         return Ok("User created successfully!");
     }
+    
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
