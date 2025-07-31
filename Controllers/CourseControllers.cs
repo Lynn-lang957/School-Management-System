@@ -26,7 +26,65 @@ namespace SchoolAPI.Controllers
         }
  [Authorize(Roles = "Student,Parent")]
         [HttpGet("enrolled")]
-        public IActionResult GetEnrolledCourses() => Ok("Enrolled courses");
+        public async Task<IActionResult> GetEnrolledCourses()
+{
+    var userId = User?.FindFirst("uid")?.Value ?? User?.Identity?.Name;
+
+    if (string.IsNullOrEmpty(userId))
+        return Unauthorized("User ID not found in token.");
+
+    if (User.IsInRole("Student"))
+    {
+        var student = await _context.Students
+            .Include(s => s.StudentCourses)
+            .ThenInclude(sc => sc.Course)
+            .FirstOrDefaultAsync(s => s.UserId == userId);
+
+        if (student == null)
+            return NotFound("Student profile not found.");
+
+        var enrolledCourses = student.StudentCourses.Select(sc => new
+        {
+            sc.Course.Id,
+            sc.Course.Title,
+            sc.Course.Description,
+            sc.Course.Credits
+        });
+
+        return Ok(enrolledCourses);
+    }
+
+    if (User.IsInRole("Parent"))
+    {
+        var parent = await _context.Parents
+            .Include(p => p.User)
+            .Include(p => p.Students)
+                .ThenInclude(s => s.StudentCourses)
+                    .ThenInclude(sc => sc.Course)
+            .FirstOrDefaultAsync(p => p.UserId == userId);
+
+        if (parent == null)
+            return NotFound("Parent profile not found.");
+
+        // Return all courses for all their children
+        var result = parent.Students.Select(child => new
+        {
+            Student = child.FullName,
+            Courses = child.StudentCourses.Select(sc => new
+            {
+                sc.Course.Id,
+                sc.Course.Title,
+                sc.Course.Description,
+                sc.Course.Credits
+            })
+        });
+
+        return Ok(result);
+    }
+
+    return Forbid();
+}
+        
         [Authorize(Roles = "Admin")]
         // POST: api/Course
         [HttpPost]
@@ -46,7 +104,31 @@ namespace SchoolAPI.Controllers
         }
        [Authorize(Roles = "Admin")]
         [HttpPost("assign-teacher")]
-        public IActionResult AssignTeacherToCourse() => Ok("Teacher assigned to course");
+        public async Task<IActionResult> AssignTeacherToCourse([FromBody] AssignTeacherDTO dto)
+{
+    var course = await _context.Courses.FindAsync(dto.CourseId);
+    if (course == null)
+        return NotFound($"Course with ID {dto.CourseId} not found.");
+
+    var teacher = await _context.Teachers.FindAsync(dto.TeacherId);
+    if (teacher == null)
+        return NotFound($"Teacher with ID {dto.TeacherId} not found.");
+
+    course.TeacherId = teacher.Id;
+    await _context.SaveChangesAsync();
+
+    return Ok(new
+    {
+        Message = "Teacher assigned to course successfully.",
+        Course = new
+        {
+            course.Id,
+            course.Title,
+            course.TeacherId
+        }
+    });
+}
+
         [Authorize(Roles = "Admin")]
         // PUT: api/Course/1
         [HttpPut("{id}")]

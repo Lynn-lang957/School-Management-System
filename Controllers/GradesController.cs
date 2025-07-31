@@ -56,7 +56,30 @@ namespace SchoolAPI.Controllers
         } 
         [Authorize(Roles = "Parent")]
         [HttpGet("child/{studentId}")]
-        public IActionResult ViewChildGrades(int studentId) => Ok("Child grades");
+    
+        public async Task<IActionResult> ViewChildGrades(int studentId)
+{
+    var userId = User.FindFirst("id")?.Value;
+
+    var parent = await _context.Parents
+        .Include(p => p.Students)
+        .FirstOrDefaultAsync(p => p.UserId == userId);
+
+    if (parent == null)
+        return Unauthorized("Parent profile not found.");
+
+    // Check if the student is linked to this parent
+    var isOwnChild = parent.Students.Any(s => s.Id == studentId);
+    if (!isOwnChild)
+        return Forbid("You are not authorized to view this student's grades.");
+
+    var grades = await _context.Grades
+        .Where(g => g.StudentId == studentId)
+        .Include(g => g.Course)
+        .ToListAsync();
+
+    return Ok(grades);
+}
        [Authorize(Roles = "Admin, Teacher")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGrade(int id, [FromBody] GradeDTO dto)

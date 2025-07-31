@@ -7,5 +7,6 @@ namespace SchoolAPI.Models
         public int CourseId { get; set; }
         public Course Course { get; set; } = null!;
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        
     }
 }

@@ -25,6 +25,23 @@ namespace SchoolAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ApplicationUser>()
+        .HasOne(a => a.Student)
+        .WithOne()
+        .HasForeignKey<ApplicationUser>(a => a.StudentId)
+        .IsRequired(false); // ✅ optional
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(a => a.Teacher)
+                .WithOne()
+                .HasForeignKey<ApplicationUser>(a => a.TeacherId)
+                .IsRequired(false); // ✅ optional
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(a => a.Parent)
+                .WithOne()
+                .HasForeignKey<ApplicationUser>(a => a.ParentId)
+                .IsRequired(false); // ✅ optional
 
             // StudentCourse Many-to-Many
             modelBuilder.Entity<StudentCourse>()
@@ -87,15 +104,12 @@ namespace SchoolAPI.Data
             .WithMany(s => s.Grades)
             .HasForeignKey(g => g.StudentId)
             .OnDelete(DeleteBehavior.Cascade);
-    modelBuilder.Entity<Course>()
-    .HasOne(c => c.Teacher)
-    .WithMany(t => t.Courses)
-    .HasForeignKey(c => c.TeacherId)
-    .OnDelete(DeleteBehavior.Cascade); 
-
+            modelBuilder.Entity<Course>()
+            .HasOne(c => c.Teacher)
+            .WithMany(t => t.Courses)
+            .HasForeignKey(c => c.TeacherId)
+             .IsRequired(false);  // ✅ Optional FK
             
-
-
 
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolAPI.Data;
 using SchoolAPI.Models;
 using SchoolAPI.DTOs;
+using System.Security.Claims;
 
 
 namespace SchoolAPI.Controllers
@@ -27,11 +28,39 @@ namespace SchoolAPI.Controllers
         }
         [Authorize(Roles = "Teacher")]
         [HttpGet("{id}")]
-        public IActionResult GetStudentsInMyCourses() => Ok("Students enrolled in my courses");
+
+        public async Task<IActionResult> GetStudentsInMyCourses()
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var teacher = await _context.Teachers
+        .Include(t => t.Courses)
+            .ThenInclude(c => c.StudentCourses)
+        .FirstOrDefaultAsync(t => t.UserId == userId);
+
+    if (teacher == null)
+        return NotFound("Teacher not found.");
+
+    var students = teacher.Courses
+        .SelectMany(c => c.StudentCourses)
+        .Distinct()
+        .ToList();
+
+    return Ok(students);
+}
 
         [Authorize(Roles = "Student")]
         [HttpGet("me")]
-        public IActionResult GetOwnProfile() => Ok("Own profile");
+        public async Task<IActionResult> GetOwnProfile()
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var student = await _context.Students
+        .FirstOrDefaultAsync(s => s.UserId == userId);
+
+    if (student == null)
+        return NotFound("Student profile not found.");
+
+    return Ok(student);
+}
 
 
         [Authorize(Roles = "Admin")]

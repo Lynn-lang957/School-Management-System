@@ -14,5 +14,5 @@ namespace SchoolAPI.DTOs
         public string Email { get; set; } = string.Empty;
 
         public DateTime DateOfBirth { get; set; }
-    }
+        public List<EnrollmentDto> Enrollments { get; set; } = new List<EnrollmentDto>();    }
 }

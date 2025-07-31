@@ -5,6 +5,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using SchoolAPI.Models;
+using SchoolAPI.Data;
+
 
 [Route("api/[controller]")]
 [ApiController]
@@ -13,14 +15,17 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
+    private readonly ApplicationDbContext _context;
 
     public AuthController(UserManager<ApplicationUser> userManager,
                           RoleManager<IdentityRole> roleManager,
-                          IConfiguration configuration)
+                          IConfiguration configuration,
+                          ApplicationDbContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+         _context = context;
     }
 
     [HttpPost("register")]
@@ -45,6 +50,19 @@ public class AuthController : ControllerBase
             await _roleManager.CreateAsync(new IdentityRole(model.Role));
 
         await _userManager.AddToRoleAsync(user, model.Role);
+        if (model.Role == "Teacher")
+{
+    var teacher = new Teacher
+    {
+        FullName = model.FullName,
+        Email = model.Email,
+        UserId = user.Id
+    };
+    _context.Teachers.Add(teacher);
+    await _context.SaveChangesAsync();
+}
+
+
 
         return Ok("User created successfully!");
     }
@@ -60,6 +78,7 @@ public class AuthController : ControllerBase
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName ?? string.Empty), 
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, roles.FirstOrDefault() ?? string.Empty)
 
@@ -74,8 +93,8 @@ var keyBytes = Encoding.UTF8.GetBytes(jwtKey);
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+               issuer: _configuration["Jwt:Issuer"],
+                       audience: _configuration["Jwt:Audience"],
                 expires: DateTime.Now.AddMinutes(60),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

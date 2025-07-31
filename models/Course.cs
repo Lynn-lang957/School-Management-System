@@ -13,8 +13,8 @@ namespace SchoolAPI.Models
         public int Credits { get; set; }
 
         public string Description { get; set; } = string.Empty;
-        public int TeacherId { get; set; }
-        public Teacher Teacher { get; set; } = null!;
+        public int? TeacherId { get; set; }
+        public Teacher? Teacher { get; set; } = null!;
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
         public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
         public ICollection<Attendance> AttendanceRecords { get; set; } = new List<Attendance>();
